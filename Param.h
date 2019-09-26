@@ -85,6 +85,7 @@ public:
 	double clkFreq;		// Clock frequency (Hz)
 
 	int NumcellPerSynapse;
+	bool NCellmode;
 };
 
 #endif

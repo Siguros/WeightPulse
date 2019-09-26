@@ -42,7 +42,7 @@
 #include "Param.h"
 #include "Array.h"
 #include "NeuroSim.h"
-
+#include <iostream>
 extern Param *param;
 
 extern std::vector< std::vector<double> > weight1;
@@ -57,7 +57,8 @@ void WeightInitialize() {
     /* Initialize weights for the input layer */
     for (int i = 0; i < param->nHide; i++) {
         for (int j = 0; j < param->nInput; j++) {
-            weight1[i][j] = (double)(rand() % 7 +(-3) ) / 3;   // random number: 0, 0.33, 0.66 or 1
+           weight1[i][j] = (double)(rand() % 7 +(-3) ) / 3;   // random number: 0, 0.33, 0.66 or 1
+			//weight1[i][j] = (double)(rand() % 4) / 3;
             //printf("weight 1 is %.4f\n", weight1[i][j]);
         }
     }
@@ -65,6 +66,7 @@ void WeightInitialize() {
     for (int i = 0; i < param->nOutput; i++) {
         for (int j = 0; j < param->nHide; j++) {
             weight2[i][j] = (double)(rand() % 7 +(-3) ) / 3;   // random number: 0, 0.33, 0.66 or 1
+			//weight2[i][j] = (double)(rand() % 4) / 3;
         }
     }
 }
@@ -74,20 +76,22 @@ void WeightToConductance() {
     /* Erase the weight of arrayIH */
     for (int col=0; col<param->nHide; col++) {
         for (int row=0; row<param->nInput; row++) {
-            arrayIH->WriteCell(col, row, -(param->maxWeight-param->minWeight), 0 /* delta_W=-(param->maxWeight-param->minWeight) will completely erase */, param->maxWeight, param->minWeight, false,0);
+            arrayIH->WriteCell(col, row, -(param->maxWeight-param->minWeight), -(param->maxWeight - param->minWeight) /* delta_W=-(param->maxWeight-param->minWeight) will completely erase */, param->maxWeight, param->minWeight, false,0);
         }
     }
     /* Erase the weight of arrayHO */
     for (int col=0; col<param->nOutput; col++) {
         for (int row=0; row<param->nHide; row++) {
-            arrayHO->WriteCell(col, row, -(param->maxWeight-param->minWeight), 0 /* delta_W=-(param->maxWeight-param->minWeight) will completely erase */, param->maxWeight, param->minWeight, false,0);
+            arrayHO->WriteCell(col, row, -(param->maxWeight-param->minWeight), -(param->maxWeight - param->minWeight) /* delta_W=-(param->maxWeight-param->minWeight) will completely erase */, param->maxWeight, param->minWeight, false,0);
         }
     }
     /* Write weight to arrayIH */
     for (int col=0; col<param->nHide; col++) {
         for (int row=0; row<param->nInput; row++) {
-            arrayIH->WriteCell(col, row, weight1[col][row], weight1[col][row], param->maxWeight, param->minWeight, false,0);
-        }
+			//std::cout << weight1[col][row] << std::endl;
+			arrayIH->WriteCell(col, row, weight1[col][row], weight1[col][row], param->maxWeight, param->minWeight, false,0);
+			//std::cout << arrayIH->ConductanceToWeight(col, row, param->maxWeight, param->minWeight) << std::endl;
+		}
     }
     /* Write weight to arrayHO */
     for (int col=0; col<param->nOutput; col++) {

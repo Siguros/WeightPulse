@@ -421,7 +421,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 			#pragma omp parallel for
 			for (int j = 0; j < param->nHide; j++) {
 				for (int k = 0; k < param->nOutput; k++) {
-					s1[j] += a1[j] * (1 - a1[j]) * weight2[k][j] * s2[k];
+					s1[j] += a1[j] * (1 - a1[j]) *weight2[k][j] * s2[k];
 				}
 			}
 
@@ -531,8 +531,18 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
                             */
                             
 							if (AnalogNVM *temp = dynamic_cast<AnalogNVM*>(arrayIH->cell[jj][k])) {	// Analog eNVM
-
-							    arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true,0);
+								//weight1[jj][k] += deltaWeight1[jj][k];
+								if (param->NCellmode) {
+									for (int a = 0; a < param->NumcellPerSynapse; a++) {
+										if ((batchSize % param->NumcellPerSynapse) == a) {
+											arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, a);
+										}
+									}
+								}
+								else {
+									arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, 0);
+								}
+								
 							    weight1[jj][k] = arrayIH->ConductanceToWeight(jj, k, param->maxWeight, param->minWeight); 
                                 weightChangeBatch = weightChangeBatch || static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->numPulse;
                                 if(fabs(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->numPulse) > maxPulseNum)
@@ -841,7 +851,18 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
                         */			
 				
 							if (AnalogNVM *temp = dynamic_cast<AnalogNVM*>(arrayHO->cell[jj][k])) { // Analog eNVM
-                                arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, false,0);
+								//weight2[jj][k] += deltaWeight2[jj][k];
+								if (param->NCellmode) {
+									for (int a = 0; a < param->NumcellPerSynapse; a++) {
+										if ((batchSize % param->NumcellPerSynapse) == a) {
+											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, a);
+										}
+									}
+								}
+								else {
+									arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, 0);
+								}
+                               
 							    weight2[jj][k] = arrayHO->ConductanceToWeight(jj, k, param->maxWeight, param->minWeight);
 								weightChangeBatch = weightChangeBatch || static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->numPulse;
                                 if(fabs(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->numPulse) > maxPulseNum)

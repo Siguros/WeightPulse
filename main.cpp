@@ -66,7 +66,7 @@ int main() {
 
 	/* Initialization of synaptic array from input to hidden layer */
 	//arrayIH->Initialization<IdealDevice>();
-	arrayIH->Initialization<RealDevice>(param->NumcellPerSynapse);
+	arrayIH->Initialization<RealDevice>(param->NumcellPerSynapse,false,param->NCellmode);
 	//arrayIH->Initialization<MeasuredDevice>();
 	//arrayIH->Initialization<SRAM>(param->numWeightBit);
 	//arrayIH->Initialization<DigitalNVM>(param->numWeightBit,true);
@@ -74,7 +74,7 @@ int main() {
 	
 	/* Initialization of synaptic array from hidden to output layer */
 	//arrayHO->Initialization<IdealDevice>();
-	arrayHO->Initialization<RealDevice>(param->NumcellPerSynapse);
+	arrayHO->Initialization<RealDevice>(param->NumcellPerSynapse,false,param->NCellmode);
 	//arrayHO->Initialization<MeasuredDevice>();
 	//arrayHO->Initialization<SRAM>(param->numWeightBit);
 	//arrayHO->Initialization<DigitalNVM>(param->numWeightBit,true);

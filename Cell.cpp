@@ -259,6 +259,7 @@ void IdealDevice::Write(double deltaWeightNormalized, double weight, double minW
 /* Real Device */
 RealDevice::RealDevice(int x, int y,int NumCellperSynapse) {
 	this->x = x; this->y = y;	// Cell location: x (column) and y (row) start from index 0
+	this->NumCellperSynapse = NumCellperSynapse;
 	maxConductance = 3.8462e-8;		// Maximum cell conductance (S)
 	minConductance = 3.0769e-9;	// Minimum cell conductance (S)
 	avgMaxConductance = NumCellperSynapse*maxConductance; // Average maximum cell conductance (S)
@@ -273,8 +274,8 @@ RealDevice::RealDevice(int x, int y,int NumCellperSynapse) {
 	writePulseWidthLTP = 300e-6;	// Write pulse width (s) for LTP or weight increase
 	writePulseWidthLTD = 300e-6;	// Write pulse width (s) for LTD or weight decrease
 	writeEnergy = 0;	// Dynamic variable for calculation of write energy (J)
-	maxNumLevelLTP = 97;	// Maximum number of conductance states during LTP or weight increase
-	maxNumLevelLTD = 100;	// Maximum number of conductance states during LTD or weight decrease
+	maxNumLevelLTP = 50;	// Maximum number of conductance states during LTP or weight increase
+	maxNumLevelLTD = 50;	// Maximum number of conductance states during LTD or weight decrease
 	numPulse = 0;	// Number of write pulses used in the most recent write operation (dynamic variable)
 	cmosAccess = true;	// True: Pseudo-crossbar (1T1R), false: cross-point
     FeFET = false;		// True: FeFET structure (Pseudo-crossbar only, should be cmosAccess=1)
@@ -310,7 +311,7 @@ RealDevice::RealDevice(int x, int y,int NumCellperSynapse) {
 	localGen.seed(std::time(0));
 	
 	/* Device-to-device weight update variation */
-	NL_LTP = 2.4;	// LTP nonlinearity
+	NL_LTP = 2.0;	// LTP nonlinearity
 	NL_LTD = -4.88;	// LTD nonlinearity
 	sigmaDtoD = 0;	// Sigma of device-to-device weight update vairation in gaussian distribution
 	gaussian_dist2 = new std::normal_distribution<double>(0, sigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
@@ -318,7 +319,8 @@ RealDevice::RealDevice(int x, int y,int NumCellperSynapse) {
 	paramALTD = getParamA(NL_LTD + (*gaussian_dist2)(localGen)) * maxNumLevelLTD;	// Parameter A for LTD nonlinearity
 
 	/* Cycle-to-cycle weight update variation */
-	sigmaCtoC = 0.035* (maxConductance - minConductance);	// Sigma of cycle-to-cycle weight update vairation: defined as the percentage of conductance range
+	//sigmaCtoC = 0.035* (maxConductance - minConductance);	// Sigma of cycle-to-cycle weight update vairation: defined as the percentage of conductance range
+	sigmaCtoC = 0;
 	gaussian_dist3 = new std::normal_distribution<double>(0, sigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
 
 	/* Conductance range variation */
@@ -397,12 +399,12 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	//if (sigmaCtoC && numPulse != 0) {
 	//	conductanceNew += (*gaussian_dist3)(gen) * sqrt(abs(numPulse));	// Absolute variation
 	//}
-	//
-	//if (conductanceNew > maxConductance) {
-	//	conductanceNew = maxConductance;
-	//} else if (conductanceNew < minConductance) {
-	//	conductanceNew = minConductance;
-	//}
+	
+	if (conductanceNewN > maxConductance) {
+		conductanceNewN = maxConductance;
+	} else if (conductanceNewN < minConductance) {
+		conductanceNewN = minConductance;
+	}
 
 	/* Write latency calculation */
 	if (!nonIdenticalPulse) {	// Identical write pulse scheme
@@ -439,7 +441,6 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	}
 	
 	conductancePrev = conductance;
-	
 	conductanceNew = conductanceNew - conductanceN[NumCell] + conductanceNewN;
 	conductanceN[NumCell] = conductanceNewN;
 	conductance = conductanceNew;

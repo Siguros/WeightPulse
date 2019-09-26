@@ -77,7 +77,7 @@ public:
 	}
 
 	template <class memoryType>
-	void Initialization(int numCellPerSynapse=1,bool refColumn = false) { // default value is 1
+	void Initialization(int numCellPerSynapse=1,bool refColumn = false, bool NCell=true) { // default value is 1
 		/* Determine number of cells per synapse (SRAM and DigitalNVM) */
 		this->numCellPerSynapse = numCellPerSynapse;
 
@@ -88,11 +88,23 @@ public:
 		else
 			//cellsPerRow = arrayColSize*numCellPerSynapse;
 			cellsPerRow = arrayColSize;
+		if (NCell) {
+			cellsPerRow = arrayColSize;
+		}
+		else {
+			cellsPerRow = arrayColSize * numCellPerSynapse;
+		}
         cell = new Cell**[cellsPerRow];
 		for (int col=0; col<cellsPerRow; col++) {
 			cell[col] = new Cell*[arrayRowSize];
 			for (int row=0; row<arrayRowSize; row++) {
-				cell[col][row] = new memoryType(col, row,numCellPerSynapse);
+				if (NCell) {
+					cell[col][row] = new memoryType(col, row, numCellPerSynapse);
+				}
+				else {
+					cell[col][row] = new memoryType(col, row, 1);
+				}
+				
 			}
 		}
         // initialize the conductance of the reference column

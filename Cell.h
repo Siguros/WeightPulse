@@ -1,4 +1,5 @@
-/*******************************************************************************
+/***
+****************************************************************************
 * Copyright (c) 2015-2017
 * School of Electrical, Computer and Energy Engineering, Arizona State University
 * PI: Prof. Shimeng Yu
@@ -62,7 +63,7 @@ public:
 	double writePulseWidthLTD;	// Write pulse width (s) of LTD or weight decrease
 	double writeEnergy;	// Dynamic variable for calculation of write energy (J)
 	double conductance;	// Current conductance (S) (Dynamic variable) at on-chip Vr (different than the Vr in the reported measurement data)
-	double conductanceN[1];
+	double conductanceN[3];
 	double conductancePrev;	// Previous conductance (S) (Dynamic variable) at on-chip Vr (different than the Vr in the reported measurement data)
 	double maxConductance;	// Maximum cell conductance (S)
 	double minConductance;	// Minimum cell conductance (S)
@@ -131,17 +132,16 @@ public:
 	double PWinitLTD;   // Initial write pulse width for LTD or weight decrease (s)
 	double PWstepLTD;   // Write pulse width for LTD or weight decrease (s)
 	double writeVoltageSquareSum;   // Sum of V^2 of non-identical pulses (for weight update energy calculation in subcircuits)
-
 	virtual double Read(double voltage) = 0;
 	virtual void Write(double deltaWeightNormalized, double weight, double minWeight, double maxWeight,int NumCell) = 0;
 	double GetMaxReadCurrent(){
-      if(cmosAccess)
-          return readVoltage * 1/(1/avgMaxConductance+resistanceAccess);
+		if (cmosAccess)
+			return readVoltage * avgMaxConductance;//+resistanceAccess);
       else 
           return readVoltage * avgMaxConductance;}
 	double GetMinReadCurrent(){
-      if(cmosAccess)
-          return readVoltage * 1/(1/avgMinConductance+resistanceAccess);
+		if (cmosAccess)
+			return readVoltage *avgMinConductance;//+resistanceAccess);
       else
           return readVoltage * avgMinConductance;}
 	void WriteEnergyCalculation(double wireCapCol);
@@ -179,6 +179,8 @@ public:
 	double paramBLTD;	// Parameter B for LTD nonlinearity
 	double sigmaDtoD;	// Sigma of device-to-device variation on weight update nonliearity baseline
 	double sigmaCtoC;	// Sigma of cycle-to-cycle variation on weight update
+
+	
 
 	RealDevice(int x, int y ,int NumcellPerSynapse);
 	double Read(double voltage);	// Return read current (A)
