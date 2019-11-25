@@ -59,7 +59,6 @@ using namespace std;
 
 int main() {
 	gen.seed(0);
-	
 	/* Load in MNIST data */
 	ReadTrainingDataFromFile("patch60000_train.txt", "label60000_train.txt");
 	ReadTestingDataFromFile("patch10000_test.txt", "label10000_test.txt");
@@ -128,20 +127,52 @@ int main() {
 	srand(0);	// Pseudorandom number seed
 	
 	ofstream mywriteoutfile;
-	mywriteoutfile.open("my_log.csv");                                                                                                            
-	
+	                                                                                                          
+	double correctav=0;
+	double NL = static_cast<RealDevice*>(arrayIH->cell[0][0])->NL_LTP;
+	int N = param->NumcellPerSynapse;
+	int CS = static_cast<RealDevice*>(arrayIH->cell[0][0])->maxNumLevelLTP;
+	double LA = param->alpha1;
+	printf("NL:%.2f N: %d CS: %d LA: %.2f\n", NL, N, CS, LA);
+	string filename;
+	char tempfile[10];
+	sprintf(tempfile, "%.2f", NL);
+	filename.append(tempfile);
+	filename.append("/");
+	sprintf(tempfile, "%d", N);
+	filename.append(tempfile);
+	filename.append("/");
+	sprintf(tempfile, "%d", CS);
+	filename.append(tempfile);
+	filename.append("/");
+	sprintf(tempfile, "%.2f", LA);
+	filename.append(tempfile);
+	filename.append("/");
+	mywriteoutfile.open(filename+".csv");
+	/*string filename = sprintf()*/
 	for (int i=1; i<=param->totalNumEpochs/param->interNumEpochs; i++) {
         //cout << "Training Epoch : " << i << endl;
+	    //model setup
+		
 		Train(param->numTrainImagesPerEpoch, param->interNumEpochs,param->optimization_type);
 		if (!param->useHardwareInTraining && param->useHardwareInTestingFF) { WeightToConductance(); }
 		Validate();
 		mywriteoutfile << i*param->interNumEpochs << ", " << (double)correct/param->numMnistTestImages*100 << endl;
 		
-		printf("Accuracy at %d epochs is : %.2f%\n", i*param->interNumEpochs, (double)correct/param->numMnistTestImages*100);
-		printf("\tRead latency=%.4e s\n", subArrayIH->readLatency + subArrayHO->readLatency);
-		printf("\tWrite latency=%.4e s\n", subArrayIH->writeLatency + subArrayHO->writeLatency);
-		printf("\tRead energy=%.4e J\n", arrayIH->readEnergy + subArrayIH->readDynamicEnergy + arrayHO->readEnergy + subArrayHO->readDynamicEnergy);
-		printf("\tWrite energy=%.4e J\n", arrayIH->writeEnergy + subArrayIH->writeDynamicEnergy + arrayHO->writeEnergy + subArrayHO->writeDynamicEnergy);
+		printf("%.2f\n", (double)correct / param->numMnistTestImages * 100);
+		if (i > (param->totalNumEpochs / param->interNumEpochs - 5)) {
+			correctav += (double)correct / param->numMnistTestImages * 100;
+			if (i == param->totalNumEpochs / param->interNumEpochs) {
+				correctav = correctav / 5;
+				printf("AV: %.2f\n", correctav);
+			}
+			
+		}
+		//printf("Accuracy at %d epochs is : %.2f%\n", i*param->interNumEpochs, (double)correct/param->numMnistTestImages*100);
+		//printf("\tRead latency=%.4e s\n", subArrayIH->readLatency + subArrayHO->readLatency);
+		//printf("\tWrite latency=%.4e s\n", subArrayIH->writeLatency + subArrayHO->writeLatency);
+		//printf("\tRead energy=%.4e J\n", arrayIH->readEnergy + subArrayIH->readDynamicEnergy + arrayHO->readEnergy + subArrayHO->readDynamicEnergy);
+		//printf("\tWrite energy=%.4e J\n", arrayIH->writeEnergy + subArrayIH->writeDynamicEnergy + arrayHO->writeEnergy + subArrayHO->writeDynamicEnergy);
 	}
 	printf("\n");
 	return 0;

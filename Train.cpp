@@ -164,7 +164,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 									sumArrayReadEnergy += arrayIH->wireCapRow * readVoltage * readVoltage; // Selected BLs (1T1R) or Selected WLs (cross-point)
 								}
 								IsumMax += arrayIH->GetMaxCellReadCurrent(j,k);
-                IsumMin += arrayIH->GetMinCellReadCurrent(j,k);
+								IsumMin += arrayIH->GetMinCellReadCurrent(j,k);
 							}
 							sumArrayReadEnergy += Isum * readVoltage * readPulseWidth;
 							int outputDigits = 2*(CurrentToDigits(Isum, IsumMax-IsumMin)-CurrentToDigits(inputSum, IsumMax-IsumMin));   
@@ -428,6 +428,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 			// Weight update
 			/* Update weight of the first layer (input layer to the hidden layer) */
 			if (param->useHardwareInTrainingWU) {
+				int countt = 0;
 				double sumArrayWriteEnergy = 0;   // Use a temporary variable here since OpenMP does not support reduction on class member
 				double sumNeuroSimWriteEnergy = 0;   // Use a temporary variable here since OpenMP does not support reduction on class member
 				double sumWriteLatencyAnalogNVM = 0;   // Use a temporary variable here since OpenMP does not support reduction on class member
@@ -444,6 +445,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
                 }
                 numBatchWriteSynapse = (int)ceil((double)arrayIH->arrayColSize / param->numWriteColMuxed);
 				#pragma omp parallel for reduction(+: sumArrayWriteEnergy, sumNeuroSimWriteEnergy, sumWriteLatencyAnalogNVM)
+				
 				for (int k = 0; k < param->nInput; k++) {
 					int numWriteOperationPerRow = 0;	// Number of write batches in a row that have any weight change
 					int numWriteCellPerOperation = 0;	// Average number of write cells per batch in a row (for digital eNVM)
@@ -532,12 +534,18 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
                             
 							if (AnalogNVM *temp = dynamic_cast<AnalogNVM*>(arrayIH->cell[jj][k])) {	// Analog eNVM
 								//weight1[jj][k] += deltaWeight1[jj][k];
+								//int count = 0;
 								if (param->NCellmode) {
-									for (int a = 0; a < param->NumcellPerSynapse; a++) {
-										if ((batchSize % param->NumcellPerSynapse) == a) {
-											arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, a);
+									//std::cout << countt << std::endl;
+										int PulseRate = param->NumcellPerSynapse * param->PulseNum;
+										int a = param->PulseNum;
+										for (int i = 0; i < param->NumcellPerSynapse; i++) {
+											if (((batchSize % PulseRate) < a*(i+1)) && ((batchSize % PulseRate) >= a*i)) {
+												//countt += 1;
+												arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, i);
+												//std::cout << countt << std::endl;
+											}
 										}
-									}
 								}
 								else {
 									arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, 0);
@@ -853,9 +861,11 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 							if (AnalogNVM *temp = dynamic_cast<AnalogNVM*>(arrayHO->cell[jj][k])) { // Analog eNVM
 								//weight2[jj][k] += deltaWeight2[jj][k];
 								if (param->NCellmode) {
-									for (int a = 0; a < param->NumcellPerSynapse; a++) {
-										if ((batchSize % param->NumcellPerSynapse) == a) {
-											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, a);
+									int PulseRate = param->NumcellPerSynapse * param->PulseNum;
+									int a = param->PulseNum;
+									for (int i = 0; i < param->NumcellPerSynapse; i++) {
+										if (((batchSize % PulseRate) < a * (i + 1)) && ((batchSize % PulseRate) >= a * i)) {
+											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, i);
 										}
 									}
 								}

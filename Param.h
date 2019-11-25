@@ -86,6 +86,9 @@ public:
 
 	int NumcellPerSynapse;
 	bool NCellmode;
+	bool PulseOperate; // modifing # of pulses / 1 cell
+	int PulseNum;
+	
 };
 
 #endif

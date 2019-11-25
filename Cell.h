@@ -63,7 +63,7 @@ public:
 	double writePulseWidthLTD;	// Write pulse width (s) of LTD or weight decrease
 	double writeEnergy;	// Dynamic variable for calculation of write energy (J)
 	double conductance;	// Current conductance (S) (Dynamic variable) at on-chip Vr (different than the Vr in the reported measurement data)
-	double conductanceN[3];
+	double conductanceN[4];
 	double conductancePrev;	// Previous conductance (S) (Dynamic variable) at on-chip Vr (different than the Vr in the reported measurement data)
 	double maxConductance;	// Maximum cell conductance (S)
 	double minConductance;	// Minimum cell conductance (S)

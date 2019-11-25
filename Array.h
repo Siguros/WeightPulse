@@ -104,7 +104,6 @@ public:
 				else {
 					cell[col][row] = new memoryType(col, row, 1);
 				}
-				
 			}
 		}
         // initialize the conductance of the reference column
