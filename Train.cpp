@@ -89,7 +89,10 @@ extern Subtractor subtractorHO;
 
 extern double totalWeightUpdate=0; // track the total weight update (absolute value) during the whole training process
 extern double totalNumPulse=0;// track the total number of pulse for the weight update process; for Analog device only
-
+extern int countPotenIH=0;
+extern int countDepIH=0;
+extern int countPotenHO=0;
+extern int countDepHO=0;
 /*Optimization functions*/
 double gradt;
 double GAMA=0.9;
@@ -114,7 +117,7 @@ double a2[param->nOutput];  // Net output of output layer [param->nOutput]
 
 double s1[param->nHide];    // Output delta from input layer to the hidden layer [param->nHide]
 double s2[param->nOutput];  // Output delta from hidden layer to the output layer [param->nOutput]
-	
+
 	for (int t = 0; t < epochs; t++) {
 		for (int batchSize = 0; batchSize < numTrain; batchSize++) {
 
@@ -542,7 +545,20 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 										for (int i = 0; i < param->NumcellPerSynapse; i++) {
 											if (((batchSize % PulseRate) < a*(i+1)) && ((batchSize % PulseRate) >= a*i)) {
 												//countt += 1;
+													if(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->maxConductance){
+											// countPoten add
+											countPotenIH += 1;
+										
+							   					}
+											else if(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->minConductance){
+											countDepIH += 1;
+												}
+											if(batchSize == (numTrain-1)){
+											std::cout<< (double)countPotenIH/(numTrain)<<std::endl;
+											std::cout<< (double)countDepIH/(numTrain)<<std::endl;
+												}		
 												arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, i);
+												// count depression max to depression or potentiation max to potentiation
 												//std::cout << countt << std::endl;
 											}
 										}
@@ -857,7 +873,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
                                 maxWeightUpdated =fabs(deltaWeight2[jj][k]);
                             }
                         */			
-				
+					   		
 							if (AnalogNVM *temp = dynamic_cast<AnalogNVM*>(arrayHO->cell[jj][k])) { // Analog eNVM
 								//weight2[jj][k] += deltaWeight2[jj][k];
 								if (param->NCellmode) {
@@ -866,6 +882,18 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 									for (int i = 0; i < param->NumcellPerSynapse; i++) {
 										if (((batchSize % PulseRate) < a * (i + 1)) && ((batchSize % PulseRate) >= a * i)) {
 											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, i);
+											if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->maxConductance){
+											// countPoten add
+											countPotenHO += 1;
+										
+							   					}
+											else if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->minConductance){
+											countDepHO += 1;
+												}
+											if(batchSize == (numTrain-1)){
+											std::cout<< (double)countPotenHO/(numTrain)<<std::endl;
+											std::cout<< (double)countDepHO/(numTrain)<<std::endl;
+												}					
 										}
 									}
 								}
