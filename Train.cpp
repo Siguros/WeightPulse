@@ -89,6 +89,10 @@ extern Subtractor subtractorHO;
 
 extern double totalWeightUpdate=0; // track the total weight update (absolute value) during the whole training process
 extern double totalNumPulse=0;// track the total number of pulse for the weight update process; for Analog device only
+extern int counttotalPotenIH=0;
+extern int counttotalDepIH=0;
+extern int counttotalPotenHO=0;
+extern int counttotalDepHO=0;
 extern int countPotenIH=0;
 extern int countDepIH=0;
 extern int countPotenHO=0;
@@ -545,6 +549,12 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 										for (int i = 0; i < param->NumcellPerSynapse; i++) {
 											if (((batchSize % PulseRate) < a*(i+1)) && ((batchSize % PulseRate) >= a*i)) {
 												//countt += 1;
+												if(deltaWeight1[jj][k] > 0){
+													counttotalPotenIH+=1;
+												}
+												else if(deltaWeight1[jj][k]<0){
+													counttotalDepIH+=1;
+												}
 													if(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->maxConductance){
 											// countPoten add
 											countPotenIH += 1;
@@ -553,10 +563,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 											else if(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->minConductance){
 											countDepIH += 1;
 												}
-											if(batchSize == (numTrain-1)){
-											std::cout<< (double)countPotenIH/(numTrain)<<std::endl;
-											std::cout<< (double)countDepIH/(numTrain)<<std::endl;
-												}		
+											
 												arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, i);
 												// count depression max to depression or potentiation max to potentiation
 												//std::cout << countt << std::endl;
@@ -881,19 +888,23 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 									int a = param->PulseNum;
 									for (int i = 0; i < param->NumcellPerSynapse; i++) {
 										if (((batchSize % PulseRate) < a * (i + 1)) && ((batchSize % PulseRate) >= a * i)) {
-											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, i);
-											if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->maxConductance){
+												if(deltaWeight2[jj][k]>0){
+													counttotalPotenHO +=1;
+												}
+												else if(deltaWeight2[jj][k]<0){
+													counttotalDepHO +=1;
+												}
+												if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->maxConductance){
 											// countPoten add
+
 											countPotenHO += 1;
 										
 							   					}
 											else if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->minConductance){
 											countDepHO += 1;
-												}
-											if(batchSize == (numTrain-1)){
-											std::cout<< (double)countPotenHO/(numTrain)<<std::endl;
-											std::cout<< (double)countDepHO/(numTrain)<<std::endl;
-												}					
+												}	
+											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, i);
+													
 										}
 									}
 								}
@@ -1092,6 +1103,12 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 					}
 				}
 			}
+				if(batchSize == (numTrain-1)){
+											std::cout<< "countPotenIH: "<< countPotenIH<< "ProbabilityIH:"<< (double)countPotenIH/counttotalPotenIH<<std::endl;
+											std::cout<< "countDepIH: "<<countDepIH<<"ProbabilityHO:"<< (double)countDepIH/counttotalDepIH<<std::endl;
+											std::cout<< "countPotenHO: "<< countPotenHO<<"ProbabilityIH:"<< (double)countPotenHO/counttotalPotenHO<<std::endl;
+											std::cout<< "countDepHO: "<<countDepHO<<"ProbabilityHO:"<< (double)countDepHO/counttotalDepHO<<std::endl;
+												}	
 		}
     }
 }
