@@ -555,18 +555,19 @@ int counttotalDepHO=0;
 												//countt += 1;
 												if(deltaWeight1[jj][k] > 0){
 													counttotalPotenIH+=1;
-												}
-												else if(deltaWeight1[jj][k]<0){
-													counttotalDepIH+=1;
-												}
 													if(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->maxConductance){
 											// countPoten add
 											countPotenIH += 1;
-										
 							   					}
-											else if(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->minConductance){
+												}
+												else if(deltaWeight1[jj][k]<0){
+													counttotalDepIH+=1;
+											if(static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayIH->cell[jj][k])->minConductance){
 											countDepIH += 1;
 												}
+												}
+													
+
 											
 												arrayIH->WriteCell(jj, k, deltaWeight1[jj][k], weight1[jj][k], param->maxWeight, param->minWeight, true, i);
 												// count depression max to depression or potentiation max to potentiation
@@ -894,19 +895,21 @@ int counttotalDepHO=0;
 										if (((batchSize % PulseRate) < a * (i + 1)) && ((batchSize % PulseRate) >= a * i)) {
 												if(deltaWeight2[jj][k]>0){
 													counttotalPotenHO +=1;
-												}
-												else if(deltaWeight2[jj][k]<0){
-													counttotalDepHO +=1;
-												}
-												if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->maxConductance){
-											// countPoten add
+																							// countPoten add
 
 											countPotenHO += 1;
 										
 							   					}
-											else if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->minConductance){
+												}
+												else if(deltaWeight2[jj][k]<0){
+													counttotalDepHO +=1;
+										if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->minConductance){
 											countDepHO += 1;
 												}	
+												}
+												if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->maxConductance){
+	
+
 											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, i);
 													
 										}
