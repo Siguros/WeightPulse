@@ -133,10 +133,11 @@ int main() {
 	int N = param->NumcellPerSynapse;
 	int CS = static_cast<RealDevice*>(arrayIH->cell[0][0])->maxNumLevelLTP;
 	double LA = param->alpha1;
-	printf("NL:%.2f N: %d CS: %d LA: %.2f\n", NL, N, CS, LA);
+	printf("NL:%.1f N: %d CS: %d LA: %.2f\n", NL, N, CS, LA);
 	string filename;
 	char tempfile[10];
-	sprintf(tempfile, "%.2f", NL);
+	filename.append(param->optimization_type);
+	sprintf(tempfile, "%.1f", NL);
 	filename.append(tempfile);
 
 	sprintf(tempfile, "%d", N);
@@ -157,8 +158,8 @@ int main() {
 		Train(param->numTrainImagesPerEpoch, param->interNumEpochs,param->optimization_type);
 		if (!param->useHardwareInTraining && param->useHardwareInTestingFF) { WeightToConductance(); }
 		Validate();
-		mywriteoutfile << i*param->interNumEpochs << ", " << (double)correct/param->numMnistTestImages*100 << endl;
-		
+		mywriteoutfile << i*param->interNumEpochs << ", " << (double)correct/param->numMnistTestImages*100 << ", "<<
+		totalAvgPotenIH<<", "<< totalAvgDepIH<<", "<< totalAvgPotenHO<<", "<< totalAvgDepHO << endl;
 		printf("%.2f\n", (double)correct / param->numMnistTestImages * 100);
 		if (i > (param->totalNumEpochs / param->interNumEpochs - 5)) {
 			correctav += (double)correct / param->numMnistTestImages * 100;

@@ -89,7 +89,10 @@ extern Subtractor subtractorHO;
 
 extern double totalWeightUpdate=0; // track the total weight update (absolute value) during the whole training process
 extern double totalNumPulse=0;// track the total number of pulse for the weight update process; for Analog device only
-
+extern double totalAvgPotenIH=0;
+extern double totalAvgDepIH=0;
+extern double totalAvgPotenHO=0;
+extern double totalAvgDepHO=0;
 
 /*Optimization functions*/
 double gradt;
@@ -1105,6 +1108,10 @@ int counttotalDepHO=0;
 				}
 			}
 				if(batchSize == (numTrain-1)){
+					totalAvgPotenIH = (double)countPotenIH/counttotalPotenIH;
+					totalAvgDepIH = (double)countDepIH/counttotalDepIH;
+					totalAvgPotenHO = (double)countPotenHO/counttotalPotenHO;
+					totalAvgDepHO =(double)countDepHO/counttotalDepHO;
 											std::cout<< "countPotenIH: "<< countPotenIH<< "ProbabilityIH:"<< (double)countPotenIH/counttotalPotenIH<<std::endl;
 											std::cout<< "countDepIH: "<<countDepIH<<"ProbabilityIH:"<< (double)countDepIH/counttotalDepIH<<std::endl;
 											std::cout<< "countPotenHO: "<< countPotenHO<<"ProbabilityHO:"<< (double)countPotenHO/counttotalPotenHO<<std::endl;

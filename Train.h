@@ -41,6 +41,10 @@
 #define TRAIN_H_
 extern double totalWeightUpdate; // track the total weight update (absolute value) during the whole training process
 extern double totalNumPulse;// track the total number of pulse for the weight update process; for Analog device only
+extern double totalAvgPotenIH;
+extern double totalAvgDepIH;
+extern double totalAvgPotenHO;
+extern double totalAvgDepHO;
 // void Train(const int numTrain, const int epochs);
 void Train(const int numTrain, const int epochs, char* optimization_type); // For decayed learning rate
 /* Availiable optimization type includes
