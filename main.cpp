@@ -138,16 +138,16 @@ int main() {
 	char tempfile[10];
 	sprintf(tempfile, "%.2f", NL);
 	filename.append(tempfile);
-	filename.append("/");
+
 	sprintf(tempfile, "%d", N);
 	filename.append(tempfile);
-	filename.append("/");
+
 	sprintf(tempfile, "%d", CS);
 	filename.append(tempfile);
-	filename.append("/");
+
 	sprintf(tempfile, "%.2f", LA);
 	filename.append(tempfile);
-	filename.append("/");
+
 	mywriteoutfile.open(filename+".csv");
 	/*string filename = sprintf()*/
 	for (int i=1; i<=param->totalNumEpochs/param->interNumEpochs; i++) {

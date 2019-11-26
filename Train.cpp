@@ -89,14 +89,8 @@ extern Subtractor subtractorHO;
 
 extern double totalWeightUpdate=0; // track the total weight update (absolute value) during the whole training process
 extern double totalNumPulse=0;// track the total number of pulse for the weight update process; for Analog device only
-extern int counttotalPotenIH=0;
-extern int counttotalDepIH=0;
-extern int counttotalPotenHO=0;
-extern int counttotalDepHO=0;
-extern int countPotenIH=0;
-extern int countDepIH=0;
-extern int countPotenHO=0;
-extern int countDepHO=0;
+
+
 /*Optimization functions*/
 double gradt;
 double GAMA=0.9;
@@ -121,10 +115,17 @@ double a2[param->nOutput];  // Net output of output layer [param->nOutput]
 
 double s1[param->nHide];    // Output delta from input layer to the hidden layer [param->nHide]
 double s2[param->nOutput];  // Output delta from hidden layer to the output layer [param->nOutput]
-
+int countPotenIH=0;
+int countDepIH=0;
+int countPotenHO=0;
+int countDepHO=0;
+int counttotalPotenIH=0;
+int counttotalDepIH=0;
+int counttotalPotenHO=0;
+int counttotalDepHO=0;
 	for (int t = 0; t < epochs; t++) {
 		for (int batchSize = 0; batchSize < numTrain; batchSize++) {
-
+		
 			int i = rand() % param->numMnistTrainImages;  // Randomize sample
             //int i = 1;       // use this value for debug
 			// Forward propagation
@@ -1105,8 +1106,8 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 			}
 				if(batchSize == (numTrain-1)){
 											std::cout<< "countPotenIH: "<< countPotenIH<< "ProbabilityIH:"<< (double)countPotenIH/counttotalPotenIH<<std::endl;
-											std::cout<< "countDepIH: "<<countDepIH<<"ProbabilityHO:"<< (double)countDepIH/counttotalDepIH<<std::endl;
-											std::cout<< "countPotenHO: "<< countPotenHO<<"ProbabilityIH:"<< (double)countPotenHO/counttotalPotenHO<<std::endl;
+											std::cout<< "countDepIH: "<<countDepIH<<"ProbabilityIH:"<< (double)countDepIH/counttotalDepIH<<std::endl;
+											std::cout<< "countPotenHO: "<< countPotenHO<<"ProbabilityHO:"<< (double)countPotenHO/counttotalPotenHO<<std::endl;
 											std::cout<< "countDepHO: "<<countDepHO<<"ProbabilityHO:"<< (double)countDepHO/counttotalDepHO<<std::endl;
 												}	
 		}
