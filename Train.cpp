@@ -895,7 +895,8 @@ int counttotalDepHO=0;
 										if (((batchSize % PulseRate) < a * (i + 1)) && ((batchSize % PulseRate) >= a * i)) {
 												if(deltaWeight2[jj][k]>0){
 													counttotalPotenHO +=1;
-																							// countPoten add
+								if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->maxConductance){
+											// countPoten add
 
 											countPotenHO += 1;
 										
@@ -903,12 +904,11 @@ int counttotalDepHO=0;
 												}
 												else if(deltaWeight2[jj][k]<0){
 													counttotalDepHO +=1;
-										if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->minConductance){
+								if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->minConductance){
 											countDepHO += 1;
 												}	
 												}
-												if(static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->conductanceN[i] == static_cast<AnalogNVM*>(arrayHO->cell[jj][k])->maxConductance){
-	
+
 
 											arrayHO->WriteCell(jj, k, deltaWeight2[jj][k], weight2[jj][k], param->maxWeight, param->minWeight, true, i);
 													
