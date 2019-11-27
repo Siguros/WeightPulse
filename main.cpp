@@ -54,7 +54,7 @@
 #include "Test.h"
 #include "Mapping.h"
 #include "Definition.h"
-
+#include "WeightTest.h"
 using namespace std;
 
 int main() {
@@ -156,28 +156,30 @@ int main() {
         //cout << "Training Epoch : " << i << endl;
 	    //model setup
 		
-		Train(param->numTrainImagesPerEpoch, param->interNumEpochs,param->optimization_type);
-		if (!param->useHardwareInTraining && param->useHardwareInTestingFF) { WeightToConductance(); }
-		Validate();
-		mywriteoutfile << i*param->interNumEpochs << ", " << (double)correct/param->numMnistTestImages*100 << ", "<<
-		totalAvgPotenIH<<", "<< totalAvgDepIH<<", "<< totalAvgPotenHO<<", "<< totalAvgDepHO << endl;
-		printf("%.2f\n", (double)correct / param->numMnistTestImages * 100);
-		if (i > (param->totalNumEpochs / param->interNumEpochs - 5)) {
-			correctav += (double)correct / param->numMnistTestImages * 100;
-			if (i == param->totalNumEpochs / param->interNumEpochs) {
-				correctav = correctav / 5;
-				printf("AV: %.2f\n", correctav);
-			}
+		// Train(param->numTrainImagesPerEpoch, param->interNumEpochs,param->optimization_type);
+		WeightTest();
+	// 	// if (!param->useHardwareInTraining && param->useHardwareInTestingFF) { WeightToConductance(); }
+	// 	// Validate();
+	// 	// mywriteoutfile << i*param->interNumEpochs << ", " << (double)correct/param->numMnistTestImages*100 << ", "<<
+	// 	// totalAvgPotenIH<<", "<< totalAvgDepIH<<", "<< totalAvgPotenHO<<", "<< totalAvgDepHO << endl;
+	// 	// printf("%.2f\n", (double)correct / param->numMnistTestImages * 100);
+	// 	// if (i > (param->totalNumEpochs / param->interNumEpochs - 5)) {
+	// 	// 	correctav += (double)correct / param->numMnistTestImages * 100;
+	// 	// 	if (i == param->totalNumEpochs / param->interNumEpochs) {
+	// 	// 		correctav = correctav / 5;
+	// 	// 		printf("AV: %.2f\n", correctav);
+	// 	// 	}
 			
-		}
-		//printf("Accuracy at %d epochs is : %.2f%\n", i*param->interNumEpochs, (double)correct/param->numMnistTestImages*100);
-		//printf("\tRead latency=%.4e s\n", subArrayIH->readLatency + subArrayHO->readLatency);
-		//printf("\tWrite latency=%.4e s\n", subArrayIH->writeLatency + subArrayHO->writeLatency);
-		//printf("\tRead energy=%.4e J\n", arrayIH->readEnergy + subArrayIH->readDynamicEnergy + arrayHO->readEnergy + subArrayHO->readDynamicEnergy);
-		//printf("\tWrite energy=%.4e J\n", arrayIH->writeEnergy + subArrayIH->writeDynamicEnergy + arrayHO->writeEnergy + subArrayHO->writeDynamicEnergy);
-	}
+	// 	}
+	// 	//printf("Accuracy at %d epochs is : %.2f%\n", i*param->interNumEpochs, (double)correct/param->numMnistTestImages*100);
+	// 	//printf("\tRead latency=%.4e s\n", subArrayIH->readLatency + subArrayHO->readLatency);
+	// 	//printf("\tWrite latency=%.4e s\n", subArrayIH->writeLatency + subArrayHO->writeLatency);
+	// 	//printf("\tRead energy=%.4e J\n", arrayIH->readEnergy + subArrayIH->readDynamicEnergy + arrayHO->readEnergy + subArrayHO->readDynamicEnergy);
+	// 	//printf("\tWrite energy=%.4e J\n", arrayIH->writeEnergy + subArrayIH->writeDynamicEnergy + arrayHO->writeEnergy + subArrayHO->writeDynamicEnergy);
+	// }
 	printf("\n");
 	return 0;
+}
 }
 
 

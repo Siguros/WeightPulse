@@ -458,6 +458,21 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	conductanceN[NumCell] = conductanceNewN;
 	conductance = conductanceNew;
 }
+void RealDevice::WritePulseToWeight(int NumCell, int numPulse){
+	double conductanceNew = conductance;
+	double conductanceNewN = conductanceN[NumCell];
+	double xPulse = InvNonlinearWeight(conductanceNewN, maxNumLevelLTP, paramALTP,paramBLTP,minConductance);
+	conductanceNewN = NonlinearWeight(xPulse + numPulse, maxNumLevelLTP, paramALTP, paramBLTP, minConductance);
+	if(conductanceNewN > maxConductance){
+		conductanceNewN = maxConductance;
+	}
+	else if( conductanceNewN < minConductance){
+		conductanceNewN = minConductance;
+	}
+	conductanceNew = conductanceNew - conductanceN[NumCell] + conductanceNewN;
+	conductanceN[NumCell] = conductanceNewN;
+	conductance = conductanceNew;
+}
 
 /* Measured device */
 MeasuredDevice::MeasuredDevice(int x, int y) {

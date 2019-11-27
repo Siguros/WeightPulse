@@ -185,6 +185,7 @@ public:
 	RealDevice(int x, int y ,int NumcellPerSynapse);
 	double Read(double voltage);	// Return read current (A)
 	void Write(double deltaWeightNormalized, double weight, double minWeight, double maxWeight,int NumCell);
+	void WritePulseToWeight(int NumCell, int numPulse);
 };
 
 class MeasuredDevice: public AnalogNVM {

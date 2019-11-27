@@ -157,6 +157,7 @@ public:
 	double GetMinCellReadCurrent(int x, int y, char*mode=NULL);
 	double GetMediumCellReadCurrent(int x, int y);
 	double ConductanceToWeight(int x, int y, double maxWeight, double minWeight,char* mode=NULL);
+	void WritePulseToWeight(int x, int y, int numPulse, int NumCell);
 };
 
 #endif

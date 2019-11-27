@@ -278,7 +278,9 @@ double Array::GetMediumCellReadCurrent(int x, int y) {
     }
 	return (Imax+Imin)/2;
 }
-
+void Array::WritePulseToWeight(int x, int y, int numPulse, int NumCell){
+	static_cast<RealDevice*>(cell[x][y])->WritePulseToWeight(NumCell, numPulse);
+}
 // convert the conductance to -1~1 
 double Array::ConductanceToWeight(int x, int y, double maxWeight, double minWeight, char* mode) {
 	if (AnalogNVM *temp = dynamic_cast<AnalogNVM*>(**cell)) 
