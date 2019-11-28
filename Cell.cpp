@@ -318,8 +318,8 @@ RealDevice::RealDevice(int x, int y,int NumCellperSynapse) {
 	localGen.seed(std::time(0));
 	
 	/* Device-to-device weight update variation */
-	NL_LTP =3.0;	// LTP nonlinearity
-	NL_LTD =-3.0;	// LTD nonlinearity
+	NL_LTP =0;	// LTP nonlinearity
+	NL_LTD =0;	// LTD nonlinearity
 	sigmaDtoD = 0;	// Sigma of device-to-device weight update vairation in gaussian distribution
 	gaussian_dist2 = new std::normal_distribution<double>(0, sigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
 	paramALTP = getParamA(NL_LTP + (*gaussian_dist2)(localGen)) * maxNumLevelLTP;	// Parameter A for LTP nonlinearity
@@ -458,11 +458,12 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	conductanceN[NumCell] = conductanceNewN;
 	conductance = conductanceNew;
 }
-void RealDevice::WritePulseToWeight(int NumCell, int numPulse){
+void RealDevice::WritePulseToWeight(int NumCell, double numPulse){
 	double conductanceNew = conductance;
 	double conductanceNewN = conductanceN[NumCell];
-	double xPulse = InvNonlinearWeight(conductanceNewN, maxNumLevelLTP, paramALTP,paramBLTP,minConductance);
-	conductanceNewN = NonlinearWeight(xPulse + numPulse, maxNumLevelLTP, paramALTP, paramBLTP, minConductance);
+	paramBLTP = (maxConductance - minConductance) / (1 - exp(-maxNumLevelLTP/paramALTP));
+	xPulse = InvNonlinearWeight(conductanceNewN, maxNumLevelLTP, paramALTP,paramBLTP,minConductance);
+	conductanceNewN = NonlinearWeight(xPulse+numPulse, maxNumLevelLTP, paramALTP, paramBLTP, minConductance);
 	if(conductanceNewN > maxConductance){
 		conductanceNewN = maxConductance;
 	}

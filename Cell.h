@@ -63,7 +63,7 @@ public:
 	double writePulseWidthLTD;	// Write pulse width (s) of LTD or weight decrease
 	double writeEnergy;	// Dynamic variable for calculation of write energy (J)
 	double conductance;	// Current conductance (S) (Dynamic variable) at on-chip Vr (different than the Vr in the reported measurement data)
-	double conductanceN[4];
+	double conductanceN[1];
 	double conductancePrev;	// Previous conductance (S) (Dynamic variable) at on-chip Vr (different than the Vr in the reported measurement data)
 	double maxConductance;	// Maximum cell conductance (S)
 	double minConductance;	// Minimum cell conductance (S)
@@ -179,13 +179,13 @@ public:
 	double paramBLTD;	// Parameter B for LTD nonlinearity
 	double sigmaDtoD;	// Sigma of device-to-device variation on weight update nonliearity baseline
 	double sigmaCtoC;	// Sigma of cycle-to-cycle variation on weight update
-
+	double SynapticWeight;
 	
 
 	RealDevice(int x, int y ,int NumcellPerSynapse);
 	double Read(double voltage);	// Return read current (A)
 	void Write(double deltaWeightNormalized, double weight, double minWeight, double maxWeight,int NumCell);
-	void WritePulseToWeight(int NumCell, int numPulse);
+	void WritePulseToWeight(int NumCell, double numPulse);
 };
 
 class MeasuredDevice: public AnalogNVM {

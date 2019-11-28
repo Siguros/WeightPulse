@@ -189,6 +189,7 @@ void Array::WriteCell(int x, int y, double deltaWeight, double weight, double ma
 			double maxConductance = static_cast<eNVM*>(cell[x][y])->maxConductance;
 			double minConductance = static_cast<eNVM*>(cell[x][y])->minConductance;
 			std::fill_n(conductanceN, numCellPerSynapse, minConductance);
+			
             // ? should add "+minConductance"?
 			for (int i = 0; i < numCellPerSynapse; i++) {
 				conductanceN[i] += (weight - minWeight) / (maxWeight - minWeight) * (maxConductance - minConductance);
@@ -200,9 +201,10 @@ void Array::WriteCell(int x, int y, double deltaWeight, double weight, double ma
 				{
 					conductanceN[i] = minConductance;
 				}
+				
 				static_cast<eNVM*>(cell[x][y])->conductanceN[i] = conductanceN[i];
 				conductance += conductanceN[i];
-				//std::cout << conductanceN[i];
+				//std::cout << static_cast<eNVM*>(cell[x][y])->conductanceN[i];
 			}
 			static_cast<eNVM*>(cell[x][y])->conductance = conductance;
 		}
@@ -278,7 +280,7 @@ double Array::GetMediumCellReadCurrent(int x, int y) {
     }
 	return (Imax+Imin)/2;
 }
-void Array::WritePulseToWeight(int x, int y, int numPulse, int NumCell){
+void Array::WritePulseToWeight(int x, int y, double numPulse, int NumCell){
 	static_cast<RealDevice*>(cell[x][y])->WritePulseToWeight(NumCell, numPulse);
 }
 // convert the conductance to -1~1 

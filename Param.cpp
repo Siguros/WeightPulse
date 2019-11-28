@@ -82,7 +82,7 @@ Param::Param() {
 	arrayWireWidth = 100;	// Array wire width (nm)
 	processNode = 32;	// Technology node (nm)
 	clkFreq = 2e9;		// Clock frequency (Hz)
-	NumcellPerSynapse =4;
+	NumcellPerSynapse =1;
 	NCellmode = true;
 	PulseOperate = false;
 	PulseNum =1; //default pulsenum=1;

@@ -32,6 +32,7 @@ void WeightTest(){
         int satcount=0;
         double weight=0;
         selectcounter = dist(mt);
+        
         for(int i=0; i < param->nInput; i++){
             
             for(int j=0; j< param->nHide; j++){
@@ -40,13 +41,17 @@ void WeightTest(){
                 if(static_cast<AnalogNVM*>(arrayIH->cell[j][i])->conductanceN[NumCell] == maxCoductance){
                     satcount+=1;
                 }
-              arrayIH->WritePulseToWeight(j,i,s,NumCell);
+              arrayIH->WritePulseToWeight(j,i,1.0,0);
               weight = arrayIH->ConductanceToWeight(j,i,1.0,0);
+            //   std:: cout << static_cast<AnalogNVM*>(arrayIH->cell[j][i])->conductanceN[0];
+             //std:: cout << static_cast<RealDevice*>(arrayIH->cell[j][i])->xPulse;
+    
         }
-    }
-    ProbabilityIH = (double)(count -satcount) / count ; 
-    std::cout << weight << " " << ProbabilityIH << std::endl;
 
+    }
+
+    ProbabilityIH = (double)(count -satcount) / count ; 
+    std::cout << weight*totalStep << " " << ProbabilityIH << std::endl;
     }
  
 

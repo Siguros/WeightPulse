@@ -12,7 +12,6 @@ NeuroSim.o: NeuroSim.cpp NeuroSim.h NeuroSim/InputParameter.h \
  NeuroSim/NewSwitchMatrix.h Array.h Cell.h NeuroSim/Adder.h \
  NeuroSim/Mux.h NeuroSim/RowDecoder.h NeuroSim/DFF.h \
  NeuroSim/Subtractor.h NeuroSim/constant.h NeuroSim/formula.h Param.h
-formula.o: formula.cpp
 Train.o: Train.cpp formula.h Param.h Array.h Cell.h Mapping.h NeuroSim.h \
  NeuroSim/InputParameter.h NeuroSim/typedef.h NeuroSim/MemCell.h \
  NeuroSim/Technology.h NeuroSim/SubArray.h NeuroSim/InputParameter.h \
@@ -55,6 +54,7 @@ main.o: main.cpp Cell.h Array.h formula.h NeuroSim.h \
  NeuroSim/NewSwitchMatrix.h NeuroSim/Adder.h NeuroSim/Mux.h \
  NeuroSim/RowDecoder.h NeuroSim/DFF.h NeuroSim/Subtractor.h Param.h IO.h \
  Train.h Test.h Mapping.h Definition.h WeightTest.h
+formula.o: formula.cpp
 Test.o: Test.cpp formula.h Param.h Array.h Cell.h Mapping.h NeuroSim.h \
  NeuroSim/InputParameter.h NeuroSim/typedef.h NeuroSim/MemCell.h \
  NeuroSim/Technology.h NeuroSim/SubArray.h NeuroSim/InputParameter.h \

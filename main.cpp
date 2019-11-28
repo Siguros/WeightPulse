@@ -121,8 +121,8 @@ int main() {
 	printf("Total leakage power of Neuron is : %.4e W\n", leakageNeuronIH + leakageNeuronHO);
 	
 	/* Initialize weights and map weights to conductances for hardware implementation */
-	WeightInitialize();
-	if (param->useHardwareInTraining) { WeightToConductance(); }
+	// WeightInitialize();
+	// if (param->useHardwareInTraining) { WeightToConductance(); }
 
 	srand(0);	// Pseudorandom number seed
 	
