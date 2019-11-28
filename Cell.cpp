@@ -281,8 +281,8 @@ RealDevice::RealDevice(int x, int y,int NumCellperSynapse) {
 	writePulseWidthLTP = 300e-6;	// Write pulse width (s) for LTP or weight increase
 	writePulseWidthLTD = 300e-6;	// Write pulse width (s) for LTD or weight decrease
 	writeEnergy = 0;	// Dynamic variable for calculation of write energy (J)
-	maxNumLevelLTP =32;	// Maximum number of conductance states during LTP or weight increase
-	maxNumLevelLTD =32;	// Maximum number of conductance states during LTD or weight decrease
+	maxNumLevelLTP =32/NumCellperSynapse;	// Maximum number of conductance states during LTP or weight increase
+	maxNumLevelLTD =32/NumCellperSynapse;	// Maximum number of conductance states during LTD or weight decrease
 	numPulse = 0;	// Number of write pulses used in the most recent write operation (dynamic variable)
 	cmosAccess = true;	// True: Pseudo-crossbar (1T1R), false: cross-point
     FeFET = false;		// True: FeFET structure (Pseudo-crossbar only, should be cmosAccess=1)
@@ -472,7 +472,11 @@ void RealDevice::WritePulseToWeight(int NumCell, double numPulse){
 	}
 	conductanceNew = conductanceNew - conductanceN[NumCell] + conductanceNewN;
 	conductanceN[NumCell] = conductanceNewN;
-	conductance = conductanceNew;
+	// conductance = conductanceNew;
+	conductance = 0;
+	for(int i=0; i<NumCellperSynapse;i++){
+		conductance +=conductanceN[i];
+	}
 }
 
 /* Measured device */

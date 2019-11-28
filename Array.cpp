@@ -93,9 +93,11 @@ double Array::ReadCell(int x, int y, char* mode) {
             else 
             {
 				cellCurrent = readVoltage / (1 / static_cast<eNVM*>(cell[x][y])->conductance);//+ totalWireResistance);
+				// std::cout<<"HI";
 			}
 		}
-        //printf("The current is %.4e\n",cellCurrent);
+        
+		//printf("The current is %.4e\n",cellCurrent);
 		return cellCurrent;
 
 	} 
@@ -296,8 +298,8 @@ double Array::ConductanceToWeight(int x, int y, double maxWeight, double minWeig
 			I = Imin;
 		else if (I>Imax)
 			I = Imax;
-        //printf("I is %.4e\n",I);
-        //printf("Imax = %.4e, Imin = %.4e\n",Imax, Imin);
+
+        // printf("Imax = %.4e, Imin = %.4e\n",Imax, Imin);
 		return (I-Imin) / (Imax-Imin) * (maxWeight-minWeight) + minWeight;
 	}
     else 

@@ -88,6 +88,7 @@ public:
 	bool NCellmode;
 	bool PulseOperate; // modifing # of pulses / 1 cell
 	int PulseNum;
+	bool Mode_Arbit; // true : Mode_Arbit , false : uniform random
 	
 };
 

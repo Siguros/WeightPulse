@@ -126,31 +126,38 @@ int main() {
 
 	srand(0);	// Pseudorandom number seed
 	
-	ofstream mywriteoutfile;
+	// ofstream mywriteoutfile;
 	                                                                                                          
-	double correctav=0;
-	double NL = static_cast<RealDevice*>(arrayIH->cell[0][0])->NL_LTP;
-	int N = param->NumcellPerSynapse;
-	int CS = static_cast<RealDevice*>(arrayIH->cell[0][0])->maxNumLevelLTP;
-	double LA = param->alpha1;
-	printf("NL:%.1f N: %d CS: %d LA: %.2f\n", NL, N, CS, LA);
-	string filename;
-	char tempfile[10];
-	filename.append(param->optimization_type);
-	sprintf(tempfile, "%.1f", NL);
-	filename.append(tempfile);
+	// double correctav=0;
+	// double NL = static_cast<RealDevice*>(arrayIH->cell[0][0])->NL_LTP;
+	// int N = param->NumcellPerSynapse;
+	// int CS = static_cast<RealDevice*>(arrayIH->cell[0][0])->maxNumLevelLTP;
 
-	sprintf(tempfile, "%d", N);
-	filename.append(tempfile);
+	// double LA = param->alpha1;
+	// printf("NL:%.1f N: %d CS: %d LA: %.2f\n", NL, N, CS, LA);
+	// string filename;
+	// char tempfile[10];
+	// if(param->Mode_Arbit){
+	// 	filename.append("Arbit");
+	// }
+	// else{
+	// 	filename.append("Rand");
+	// }
+	
+	// sprintf(tempfile, "%.1f", NL);
+	// filename.append(tempfile);
 
-	sprintf(tempfile, "%d", CS);
-	filename.append(tempfile);
+	// sprintf(tempfile, "%d", N);
+	// filename.append(tempfile);
 
-	sprintf(tempfile, "%.2f", LA);
-	filename.append(tempfile);
+	// sprintf(tempfile, "%d", CS);
+	// filename.append(tempfile);
 
-	mywriteoutfile.open(filename+".csv");
-	cout<< filename+".csv" << endl;
+	// sprintf(tempfile, "%.2f", LA);
+	// filename.append(tempfile);
+
+	// mywriteoutfile.open(filename+".csv");
+	// cout<< filename+".csv" << endl;
 	/*string filename = sprintf()*/
 	for (int i=1; i<=param->totalNumEpochs/param->interNumEpochs; i++) {
         //cout << "Training Epoch : " << i << endl;
@@ -160,7 +167,7 @@ int main() {
 		WeightTest();
 	// 	// if (!param->useHardwareInTraining && param->useHardwareInTestingFF) { WeightToConductance(); }
 	// 	// Validate();
-	// 	// mywriteoutfile << i*param->interNumEpochs << ", " << (double)correct/param->numMnistTestImages*100 << ", "<<
+	    //  mywriteoutfile << i*param->interNumEpochs << ", " << (double)correct/param->numMnistTestImages*100 << ", "<<
 	// 	// totalAvgPotenIH<<", "<< totalAvgDepIH<<", "<< totalAvgPotenHO<<", "<< totalAvgDepHO << endl;
 	// 	// printf("%.2f\n", (double)correct / param->numMnistTestImages * 100);
 	// 	// if (i > (param->totalNumEpochs / param->interNumEpochs - 5)) {
