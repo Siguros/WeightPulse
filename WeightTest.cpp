@@ -37,11 +37,11 @@ void WeightTest(){
             for(int j=0; j< param->nHide; j++){
                 count +=1;
                 NumCell=selectcounter%param->NumcellPerSynapse;
-                if(static_cast<AnalogNVM*>(arrayIH->cell[i][j])->conductanceN[NumCell] == maxCoductance){
+                if(static_cast<AnalogNVM*>(arrayIH->cell[j][i])->conductanceN[NumCell] == maxCoductance){
                     satcount+=1;
                 }
-                arrayIH->WritePulseToWeight(i,j,s,NumCell);
-              weight = arrayIH->ConductanceToWeight(i,j,1,0);
+              arrayIH->WritePulseToWeight(j,i,s,NumCell);
+              weight = arrayIH->ConductanceToWeight(j,i,1.0,0);
         }
     }
     ProbabilityIH = (double)(count -satcount) / count ; 
